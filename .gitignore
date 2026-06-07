@@ -9,7 +9,7 @@ Thumbs.db
 
 # Fichiers sources (originaux non optimisés)
 assets/*.jpeg
-assets/*.png
+assets/logo-raw.png
 assets/photo1.jpg
 assets/photo2.jpg
 assets/bg3.jpg
