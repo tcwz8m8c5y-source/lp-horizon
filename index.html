@@ -24,6 +24,8 @@
 <meta name="twitter:description" content="Rendus 3D photo-réalistes pour professionnels du bâtiment et particuliers. Devis gratuit sous 24h.">
 <meta name="twitter:image" content="https://lphorizon.fr/assets/render-farm.jpg">
 
+<link rel="preload" href="assets/logo.png" as="image">
+<link rel="preload" href="assets/render-farm.jpg" as="image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -848,7 +850,7 @@
 
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ─── RESPONSIVE ────────────────────────────── */
+  /* ─── RESPONSIVE TABLETTE ──────────────────── */
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
     nav ul { gap: 1.5rem; }
@@ -871,6 +873,75 @@
     .footer { flex-direction: column; gap: 1.5rem; text-align: center; }
     footer { padding: 2rem 1.5rem; }
   }
+
+  /* ─── RESPONSIVE MOBILE ─────────────────────── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 110;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--navy);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 600px) {
+    .nav-hamburger { display: flex; }
+
+    nav ul {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,240,232,0.97);
+      backdrop-filter: blur(20px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      z-index: 105;
+    }
+    nav ul.open { display: flex; }
+    nav ul a { font-size: 1.2rem; }
+    .nav-cta { padding: 0.75rem 2rem !important; font-size: 1rem !important; }
+
+    .hero { padding-top: 70px; }
+    .hero-right { height: 55vw; }
+    .hero-left { padding: 3rem 1.25rem 2rem; }
+    .hero-headline { font-size: clamp(2rem, 8vw, 3rem); }
+
+    section { padding: 3rem 1.25rem; }
+    .section-title { font-size: clamp(1.6rem, 6vw, 2rem); }
+
+    .trust-items { gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+
+    .services-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+    .who-mosaic { display: none; }
+
+    .process-steps { grid-template-columns: 1fr; gap: 2rem; }
+
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item.wide { grid-column: span 1; }
+    .portfolio-item img, .portfolio-item.wide img { height: 220px; }
+
+    .tarif-card { padding: 2rem 1.5rem; }
+
+    .form-row { grid-template-columns: 1fr; }
+
+    footer { padding: 2rem 1.25rem; }
+    .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -884,14 +955,31 @@
       <small>Modélisation 3D</small>
     </div>
   </a>
-  <ul>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#portfolio">Réalisations</a></li>
-    <li><a href="#process">Méthode</a></li>
-    <li><a href="#tarifs">Tarifs</a></li>
-    <li><a href="#contact" class="nav-cta">Demander un devis</a></li>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="nav-menu">
+    <li><a href="#services" class="nav-link">Services</a></li>
+    <li><a href="#portfolio" class="nav-link">Réalisations</a></li>
+    <li><a href="#process" class="nav-link">Méthode</a></li>
+    <li><a href="#tarifs" class="nav-link">Tarifs</a></li>
+    <li><a href="#contact" class="nav-cta nav-link">Demander un devis</a></li>
   </ul>
 </nav>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      navMenu.classList.remove('open');
+    });
+  });
+</script>
 
 <!-- ═══ HERO ═══════════════════════════════════════ -->
 <section class="hero" id="hero">

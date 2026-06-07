@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable — L&P Horizon</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0E1E3A;
+    --accent: #C8A96A;
+    --cream: #F5F0E8;
+    --text-muted: #5A6A82;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+  .logo-img {
+    height: 48px;
+    width: auto;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+  }
+  .code {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(6rem, 15vw, 10rem);
+    font-weight: 200;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 380px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+  a {
+    background: var(--accent);
+    color: var(--navy);
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+  a:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+  <img src="assets/logo.png" alt="L&P Horizon" class="logo-img">
+  <div class="code">404</div>
+  <h1>Page introuvable</h1>
+  <p>Cette page n'existe pas ou a été déplacée. Retournez à l'accueil pour découvrir nos réalisations.</p>
+  <a href="/">Retour à l'accueil</a>
+</body>
+</html>
