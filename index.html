@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&P Horizon — Modélisation 3D & Rendus Photo-Réalistes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:        #0E1E3A;
+    --navy-mid:    #1A3260;
+    --navy-light:  #243D70;
+    --accent:      #C8A96A;
+    --accent-light:#E8D5A8;
+    --cream:       #F5F0E8;
+    --cream-dark:  #EBE4D6;
+    --text:        #0E1E3A;
+    --text-muted:  #5A6A82;
+    --white:       #FFFFFF;
+    --r:           16px;
+    --ease:        0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ─── NAV ─────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    backdrop-filter: blur(16px);
+    background: rgba(245,240,232,0.88);
+    border-bottom: 1px solid rgba(14,30,58,0.08);
+    transition: var(--ease);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--navy);
+  }
+
+  .logo img {
+    height: 36px; width: auto;
+    display: block;
+  }
+
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem; font-weight: 300;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .logo-text small {
+    display: block;
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-weight: 400; margin-top: 2px;
+  }
+
+  nav ul {
+    display: flex; gap: 2.5rem; list-style: none;
+    align-items: center;
+  }
+
+  nav ul a {
+    text-decoration: none; color: var(--text-muted);
+    font-size: 0.875rem; font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color var(--ease);
+  }
+
+  nav ul a:hover { color: var(--navy); }
+
+  .nav-cta {
+    background: var(--navy) !important;
+    color: var(--white) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 100px;
+    font-size: 0.875rem !important;
+    transition: background var(--ease), transform var(--ease) !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--navy-mid) !important;
+    transform: translateY(-1px);
+  }
+
+  /* ─── HERO ────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 6rem 3rem 6rem 4rem;
+    position: relative; z-index: 2;
+  }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--navy); color: var(--accent-light);
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 500; padding: 0.4rem 1rem; border-radius: 100px;
+    margin-bottom: 2rem; width: fit-content;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent); border-radius: 50%;
+  }
+
+  .hero-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    font-weight: 200;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero-headline em {
+    font-style: italic; font-weight: 300;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1rem; color: var(--text-muted);
+    font-weight: 300; line-height: 1.75;
+    max-width: 420px; margin-bottom: 3rem;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; align-items: center;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--navy); color: var(--white);
+    padding: 0.85rem 2rem; border-radius: 100px;
+    text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: all var(--ease); border: none; cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--navy-mid);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(14,30,58,0.2);
+  }
+
+  .btn-ghost {
+    color: var(--navy); text-decoration: none;
+    font-size: 0.9rem; font-weight: 400;
+    display: flex; align-items: center; gap: 6px;
+    transition: gap var(--ease);
+  }
+  .btn-ghost::after { content: '→'; }
+  .btn-ghost:hover { gap: 10px; }
+
+  /* Hero right — 3D visual */
+  .hero-right {
+    position: relative; overflow: hidden;
+    animation: fadeIn 1s ease 0.4s both;
+    background: var(--navy);
+  }
+
+  .hero-canvas {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero-3d-grid {
+    position: absolute; inset: 0; opacity: 0.12;
+  }
+
+  .hero-img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(14,30,58,0.65) 0%, rgba(14,30,58,0.2) 100%);
+    z-index: 1;
+  }
+
+  .hero-photos {
+    position: absolute; inset: 0; z-index: 0;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+
+  .hero-photos img {
+    width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.6;
+    transition: opacity 0.5s ease;
+  }
+
+  .hero-photo-label {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; text-align: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .hero-badge {
+    position: absolute; top: 2.5rem; right: 2rem;
+    z-index: 3;
+    background: rgba(200,169,106,0.15);
+    border: 1px solid rgba(200,169,106,0.35);
+    backdrop-filter: blur(8px);
+    border-radius: 12px; padding: 1rem 1.25rem;
+    text-align: center; color: var(--white);
+  }
+
+  .hero-badge-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem; font-weight: 200;
+    color: var(--accent); line-height: 1;
+    display: block;
+  }
+
+  .hero-badge-label {
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-top: 4px;
+    display: block;
+  }
+
+  /* ─── TRUST BAR ─────────────────────────────── */
+  .trust-bar {
+    background: var(--cream-dark);
+    padding: 1.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 2rem; flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.82rem; color: var(--text-muted); font-weight: 300;
+  }
+
+  .trust-icon {
+    width: 16px; height: 16px; color: var(--accent); flex-shrink: 0;
+  }
+
+  .trust-divider {
+    width: 1px; height: 28px; background: rgba(14,30,58,0.1);
+  }
+
+  /* ─── SECTIONS BASE ─────────────────────────── */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 500;
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-label::before {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.9rem, 3vw, 2.8rem);
+    font-weight: 200; line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--navy); margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    font-size: 1rem; color: var(--text-muted);
+    font-weight: 300; line-height: 1.75;
+    max-width: 520px;
+  }
+
+  /* ─── SERVICES ──────────────────────────────── */
+  .services { background: var(--navy); }
+  .services .section-label { color: var(--accent); }
+  .services .section-title { color: var(--white); }
+
+  .services-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; margin-bottom: 4rem; align-items: end;
+  }
+
+  .services-desc {
+    font-size: 1rem; color: rgba(255,255,255,0.55);
+    font-weight: 300; line-height: 1.8; align-self: end;
+  }
+
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.07);
+    border-radius: var(--r); overflow: hidden;
+  }
+
+  .service-card {
+    background: rgba(255,255,255,0.03);
+    padding: 2.5rem 2rem;
+    transition: background var(--ease);
+    cursor: default; position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--ease);
+  }
+
+  .service-card:hover { background: rgba(255,255,255,0.07); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'Fraunces', serif;
+    font-size: 0.7rem; color: var(--accent);
+    opacity: 0.6; margin-bottom: 1.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .service-icon {
+    width: 44px; height: 44px;
+    border: 1px solid rgba(200,169,106,0.25);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem; font-size: 20px;
+  }
+
+  .service-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1.2rem; font-weight: 300;
+    color: var(--white); margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .service-desc {
+    font-size: 0.85rem; color: rgba(255,255,255,0.45);
+    line-height: 1.7; font-weight: 300;
+  }
+
+  .service-tags {
+    margin-top: 1.5rem;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+
+  .service-tag {
+    background: rgba(200,169,106,0.12);
+    color: var(--accent-light);
+    font-size: 0.68rem; letter-spacing: 0.06em;
+    padding: 0.25rem 0.65rem; border-radius: 100px;
+  }
+
+  /* ─── WHO ───────────────────────────────────── */
+  .who { background: var(--cream); }
+
+  .who-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; margin-top: 3rem; align-items: center;
+  }
+
+  .who-visual {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .who-photo {
+    border-radius: 12px; overflow: hidden;
+    position: relative;
+  }
+
+  .who-photo img {
+    width: 100%; height: 220px;
+    object-fit: cover; display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .who-photo:hover img { transform: scale(1.04); }
+
+  .who-photo.tall { grid-row: span 2; }
+  .who-photo.tall img { height: 100%; min-height: 460px; }
+
+  .who-photo-cap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 1rem 1rem 0.75rem;
+    background: linear-gradient(to top, rgba(14,30,58,0.75) 0%, transparent 100%);
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .who-clients {
+    display: flex; flex-direction: column; gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .who-client {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--white); border-radius: 12px;
+    border: 1px solid rgba(14,30,58,0.07);
+    transition: all var(--ease);
+  }
+
+  .who-client:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(14,30,58,0.06);
+  }
+
+  .who-client-icon {
+    font-size: 22px; flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: rgba(200,169,106,0.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .who-client-name {
+    font-size: 0.9rem; font-weight: 500; color: var(--navy);
+  }
+
+  .who-client-desc {
+    font-size: 0.78rem; color: var(--text-muted);
+    font-weight: 300; margin-top: 2px;
+  }
+
+  /* ─── PROCESS ───────────────────────────────── */
+  .process { background: var(--cream-dark); }
+
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 3rem; position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 14%; right: 14%;
+    height: 1px; background: rgba(200,169,106,0.3);
+    z-index: 0;
+  }
+
+  .process-step {
+    display: flex; flex-direction: column; align-items: flex-start;
+    padding: 0 2rem; position: relative; z-index: 1;
+  }
+
+  .process-step:first-child { padding-left: 0; }
+  .process-step:last-child { padding-right: 0; }
+
+  .step-dot {
+    width: 56px; height: 56px;
+    border: 1px solid rgba(200,169,106,0.4);
+    border-radius: 50%;
+    background: var(--cream-dark);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.75rem;
+  }
+
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem; font-weight: 200;
+    color: var(--accent);
+  }
+
+  .step-title {
+    font-size: 0.95rem; font-weight: 500;
+    color: var(--navy); margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.82rem; color: var(--text-muted);
+    font-weight: 300; line-height: 1.65;
+  }
+
+  /* ─── PORTFOLIO ─────────────────────────────── */
+  .portfolio { background: var(--navy); }
+  .portfolio .section-title { color: var(--white); }
+  .portfolio .section-label { color: var(--accent); }
+  .portfolio .section-sub { color: rgba(255,255,255,0.5); }
+
+  .portfolio-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3rem;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .portfolio-item {
+    border-radius: 12px; overflow: hidden;
+    position: relative; cursor: pointer;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .portfolio-item.wide { grid-column: span 2; }
+
+  .portfolio-item img {
+    width: 100%; height: 240px;
+    object-fit: cover; display: block;
+    transition: transform 0.6s ease;
+    opacity: 0.8;
+  }
+
+  .portfolio-item.wide img { height: 260px; }
+
+  .portfolio-item:hover img {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  .portfolio-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(14,30,58,0.9) 0%, transparent 55%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.5rem;
+  }
+
+  .portfolio-cat {
+    font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.3rem;
+  }
+
+  .portfolio-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--white); line-height: 1.3;
+  }
+
+  .portfolio-cta-row {
+    text-align: center; margin-top: 3rem;
+  }
+
+  .btn-outline-light {
+    display: inline-block;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    padding: 0.85rem 2.5rem; border-radius: 100px;
+    font-size: 0.875rem; font-weight: 400;
+    transition: all var(--ease);
+  }
+
+  .btn-outline-light:hover {
+    border-color: var(--accent);
+    color: var(--accent-light);
+    transform: translateY(-1px);
+  }
+
+  /* ─── TARIFS ────────────────────────────────── */
+  .tarifs { background: var(--cream); }
+
+  .tarifs-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+
+  .tarif-card {
+    background: var(--white);
+    border-radius: var(--r); padding: 2.5rem;
+    border: 1px solid rgba(14,30,58,0.08);
+    transition: all var(--ease); position: relative;
+  }
+
+  .tarif-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 48px rgba(14,30,58,0.09);
+  }
+
+  .tarif-card.featured {
+    background: var(--navy); border-color: var(--navy);
+  }
+
+  .tarif-card.featured .tarif-name,
+  .tarif-card.featured .tarif-amount,
+  .tarif-card.featured .tarif-feature { color: var(--white); }
+  .tarif-card.featured .tarif-desc,
+  .tarif-card.featured .tarif-period { color: rgba(255,255,255,0.5); }
+  .tarif-card.featured .tarif-divider { background: rgba(255,255,255,0.1); }
+
+  .featured-label {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: var(--navy);
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500; padding: 0.3rem 1rem; border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .tarif-name {
+    font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 500; margin-bottom: 1.5rem;
+  }
+
+  .tarif-amount {
+    font-family: 'Fraunces', serif;
+    font-size: 2.8rem; font-weight: 200;
+    color: var(--navy); line-height: 1; margin-bottom: 0.25rem;
+  }
+
+  .tarif-amount sup {
+    font-size: 1.1rem; vertical-align: super; font-weight: 300;
+  }
+
+  .tarif-period {
+    font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;
+  }
+
+  .tarif-desc {
+    font-size: 0.85rem; color: var(--text-muted);
+    font-weight: 300; line-height: 1.6; margin-bottom: 1.5rem;
+  }
+
+  .tarif-divider {
+    height: 1px; background: rgba(14,30,58,0.08); margin-bottom: 1.5rem;
+  }
+
+  .tarif-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .tarif-feature {
+    font-size: 0.83rem; color: var(--text);
+    display: flex; align-items: flex-start; gap: 8px; font-weight: 300;
+  }
+
+  .tarif-feature::before {
+    content: '✓'; color: var(--accent); font-size: 0.72rem;
+    margin-top: 2px; flex-shrink: 0;
+  }
+
+  .tarif-cta {
+    display: block; margin-top: 2rem; text-align: center;
+    padding: 0.85rem; border-radius: 100px;
+    font-size: 0.875rem; font-weight: 500;
+    text-decoration: none; transition: all var(--ease); cursor: pointer;
+  }
+
+  .tarif-card:not(.featured) .tarif-cta {
+    background: transparent;
+    border: 1px solid rgba(14,30,58,0.18);
+    color: var(--navy);
+  }
+
+  .tarif-card:not(.featured) .tarif-cta:hover {
+    background: var(--navy); color: var(--white);
+    border-color: var(--navy);
+  }
+
+  .tarif-card.featured .tarif-cta {
+    background: var(--accent); color: var(--navy);
+  }
+
+  .tarif-card.featured .tarif-cta:hover { background: var(--accent-light); }
+
+  .tarif-note {
+    margin-top: 2rem; padding: 1.25rem 1.5rem;
+    background: rgba(200,169,106,0.1);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    font-size: 0.875rem; color: var(--text-muted);
+    font-weight: 300; line-height: 1.6;
+  }
+
+  .tarif-note strong { color: var(--navy); font-weight: 500; }
+
+  /* ─── CONTACT ───────────────────────────────── */
+  .contact { background: var(--navy); }
+  .contact .section-label { color: var(--accent); }
+  .contact .section-title { color: var(--white); }
+
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; margin-top: 3rem; align-items: start;
+  }
+
+  .contact-info p {
+    font-size: 1rem; color: rgba(255,255,255,0.5);
+    font-weight: 300; line-height: 1.8; margin-bottom: 3rem;
+  }
+
+  .contact-details { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .contact-detail {
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  .contact-detail-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    border: 1px solid rgba(200,169,106,0.25);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 17px;
+  }
+
+  .contact-detail-text {
+    font-size: 0.9rem; color: rgba(255,255,255,0.8); font-weight: 300;
+  }
+
+  .contact-detail-text strong {
+    display: block; color: rgba(255,255,255,0.4);
+    font-weight: 400; font-size: 0.68rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .contact-form {
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--r); padding: 2.5rem;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .form-group { margin-bottom: 1.25rem; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); font-weight: 400; margin-bottom: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 0.85rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 300;
+    color: var(--white); outline: none;
+    transition: border-color var(--ease);
+    -webkit-appearance: none;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(200,169,106,0.5);
+  }
+
+  .form-group select option { background: var(--navy); }
+  .form-group textarea { resize: none; height: 110px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .submit-btn {
+    width: 100%; margin-top: 0.75rem;
+    background: var(--accent); color: var(--navy);
+    border: none; border-radius: 100px; padding: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all var(--ease);
+  }
+
+  .submit-btn:hover {
+    background: var(--accent-light);
+    transform: translateY(-1px);
+  }
+
+  /* ─── FOOTER ────────────────────────────────── */
+  footer {
+    background: #060D1C;
+    padding: 2.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .footer-logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 0.9rem; font-weight: 300;
+    color: rgba(255,255,255,0.35); letter-spacing: 0.04em;
+  }
+
+  .footer-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 0.78rem; color: rgba(255,255,255,0.25);
+    text-decoration: none; transition: color var(--ease);
+  }
+  .footer-links a:hover { color: rgba(255,255,255,0.6); }
+
+  .footer-copy {
+    font-size: 0.72rem; color: rgba(255,255,255,0.18);
+  }
+
+  /* ─── ANIMATIONS ────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ────────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-right { height: 50vw; }
+    .hero-left { padding: 5rem 1.5rem 3rem; }
+    section { padding: 4rem 1.5rem; }
+    .services-header { grid-template-columns: 1fr; gap: 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .who-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-steps::before { display: none; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .portfolio-item.wide { grid-column: span 2; }
+    .portfolio-item img { height: 200px; }
+    .portfolio-item.wide img { height: 220px; }
+    .tarifs-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .trust-bar { padding: 1.25rem 1.5rem; }
+    .footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="logo">
+    <img src="assets/logo-navy.jpg" alt="L&P Horizon">
+    <div class="logo-text">
+      L&P Horizon
+      <small>Modélisation 3D</small>
+    </div>
+  </a>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Réalisations</a></li>
+    <li><a href="#process">Méthode</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+    <li><a href="#contact" class="nav-cta">Demander un devis</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Agence de modélisation 3D</div>
+    <h1 class="hero-headline">
+      Votre projet,<br>
+      <em>visualisé</em><br>
+      avant d'être bâti.
+    </h1>
+    <p class="hero-sub">
+      L&P Horizon crée des rendus photo-réalistes et maquettes 3D pour les professionnels du bâtiment et les particuliers. Présentez, convainquez, décidez — avant même de poser la première pierre.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Demander un devis</a>
+      <a href="#portfolio" class="btn-ghost">Voir les réalisations</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- Background images -->
+    <div class="hero-photos">
+      <img src="assets/render-farm.jpg" alt="Rendu 3D bâtiment agricole">
+      <img src="assets/render-maison-crepuscule.jpg" alt="Rendu 3D façade résidentielle">
+    </div>
+    <div class="hero-img-overlay"></div>
+
+    <!-- Grid décoratif SVG -->
+    <svg class="hero-3d-grid" viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#C8A96A" stroke-width="0.4"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+
+    <!-- Badge flottant -->
+    <div class="hero-badge">
+      <span class="hero-badge-num">J+7</span>
+      <span class="hero-badge-label">Livraison<br>moyenne</span>
+    </div>
+
+    <div class="hero-photo-label">Rendu photo-réaliste · Maquette 3D</div>
+  </div>
+</section>
+
+<!-- ═══ TRUST BAR ══════════════════════════════════ -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909"/><path d="M3.75 21h16.5M4.5 3h15a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H4.5a.75.75 0 01-.75-.75V3.75A.75.75 0 014.5 3z"/></svg>
+    Rendus photo-réalistes haute définition
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25"/></svg>
+    Maquettes 3D & visites virtuelles
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Livraison sous 7 jours ouvrés
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+    Révisions incluses
+  </div>
+</div>
+
+<!-- ═══ SERVICES ════════════════════════════════════ -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-label">Nos services</div>
+      <h2 class="section-title">Du modèle numérique<br>à l'image qui convainc.</h2>
+    </div>
+    <p class="services-desc">
+      Que vous soyez maître d'œuvre, promoteur ou particulier, nous traduisons vos plans et vos idées en visuels percutants — pour vendre, obtenir des autorisations ou simplement décider.
+    </p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-icon">🏠</div>
+      <h3 class="service-name">Rendu photo-réaliste</h3>
+      <p class="service-desc">Extérieur ou intérieur, jour ou nuit : des images haute définition qui montrent votre projet comme s'il était déjà construit.</p>
+      <div class="service-tags">
+        <span class="service-tag">Façade</span>
+        <span class="service-tag">Intérieur</span>
+        <span class="service-tag">Ambiance</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-num">02</div>
+      <div class="service-icon">🧊</div>
+      <h3 class="service-name">Modélisation 3D</h3>
+      <p class="service-desc">Création du modèle numérique complet à partir de vos plans, croquis ou photos. Précis, modifiable et réutilisable.</p>
+      <div class="service-tags">
+        <span class="service-tag">Architecture</span>
+        <span class="service-tag">Ravalement</span>
+        <span class="service-tag">Aménagement</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-num">03</div>
+      <div class="service-icon">🎬</div>
+      <h3 class="service-name">Animation & visite virtuelle</h3>
+      <p class="service-desc">Plongez vos clients dans leur futur espace grâce à une vidéo animée ou une visite virtuelle interactive à 360°.</p>
+      <div class="service-tags">
+        <span class="service-tag">Vidéo</span>
+        <span class="service-tag">360°</span>
+        <span class="service-tag">Présentation</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <div class="service-icon">📐</div>
+      <h3 class="service-name">Plans & coupes techniques</h3>
+      <p class="service-desc">Mise en valeur de vos plans 2D en documents clairs et professionnels, prêts pour vos dépôts de permis ou dossiers clients.</p>
+      <div class="service-tags">
+        <span class="service-tag">Permis</span>
+        <span class="service-tag">DP Travaux</span>
+        <span class="service-tag">Notice</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-num">05</div>
+      <div class="service-icon">🏗️</div>
+      <h3 class="service-name">Chantier avant / après</h3>
+      <p class="service-desc">Simulation visuelle de l'état avant travaux et du résultat attendu — pour vos devis, vos clients et vos dossiers d'autorisation.</p>
+      <div class="service-tags">
+        <span class="service-tag">Ravalement</span>
+        <span class="service-tag">Rénovation</span>
+        <span class="service-tag">Comparatif</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <div class="service-num">06</div>
+      <div class="service-icon">🤝</div>
+      <h3 class="service-name">Partenariat agence</h3>
+      <p class="service-desc">Volume régulier ? Nous proposons des formules de collaboration mensuelle adaptées aux entreprises avec des besoins récurrents.</p>
+      <div class="service-tags">
+        <span class="service-tag">Mensuel</span>
+        <span class="service-tag">Prioritaire</span>
+        <span class="service-tag">Dédié</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ POUR QUI ════════════════════════════════════ -->
+<section class="who" id="who">
+  <div class="who-grid">
+    <div>
+      <div class="section-label">Pour qui ?</div>
+      <h2 class="section-title">PME du bâtiment<br>et particuliers.</h2>
+      <p class="section-sub" style="margin-bottom: 0">
+        De l'entreprise de ravalement qui veut convaincre ses clients jusqu'au particulier qui projette sa rénovation, nos visuels 3D donnent du poids à votre projet.
+      </p>
+      <div class="who-clients">
+        <div class="who-client">
+          <div class="who-client-icon">🏢</div>
+          <div>
+            <div class="who-client-name">Entreprises de ravalement de façade</div>
+            <div class="who-client-desc">Illustrations pour devis et dossiers DP</div>
+          </div>
+        </div>
+        <div class="who-client">
+          <div class="who-client-icon">🔨</div>
+          <div>
+            <div class="who-client-name">Artisans & entrepreneurs BTP</div>
+            <div class="who-client-desc">Visuels avant / après pour présenter vos chantiers</div>
+          </div>
+        </div>
+        <div class="who-client">
+          <div class="who-client-icon">📐</div>
+          <div>
+            <div class="who-client-name">Architectes & maîtres d'œuvre</div>
+            <div class="who-client-desc">Rendus de présentation pour vos clients</div>
+          </div>
+        </div>
+        <div class="who-client">
+          <div class="who-client-icon">🏠</div>
+          <div>
+            <div class="who-client-name">Particuliers</div>
+            <div class="who-client-desc">Visualisation de projets de rénovation ou d'extension</div>
+          </div>
+        </div>
+        <div class="who-client">
+          <div class="who-client-icon">🏘️</div>
+          <div>
+            <div class="who-client-name">Agents immobiliers & promoteurs</div>
+            <div class="who-client-desc">Rendus commerciaux pour ventes sur plans</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="who-visual reveal">
+      <div class="who-photo tall">
+        <img src="assets/render-extension.jpg" alt="Extension maison avec terrasse bois">
+        <div class="who-photo-cap">Extension & rénovation</div>
+      </div>
+      <div class="who-photo">
+        <img src="assets/render-cour-paris.jpg" alt="Cour parisienne avec pergola">
+        <div class="who-photo-cap">Architecture parisienne</div>
+      </div>
+      <div class="who-photo">
+        <img src="assets/render-interieur.jpg" alt="Aménagement intérieur boutique">
+        <div class="who-photo-cap">Aménagement intérieur</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ═════════════════════════════════════ -->
+<section class="process" id="process">
+  <div class="section-label reveal">Méthode de travail</div>
+  <h2 class="section-title reveal">Simple et efficace,<br>de A à Z.</h2>
+
+  <div class="process-visual-wrap reveal" style="margin-top:3rem; margin-bottom:3rem; border-radius:16px; overflow:hidden; position:relative; max-height:340px;">
+    <img src="assets/render-dp-processus.jpg" alt="Du croquis au rendu — L&P Horizon" style="width:100%; height:340px; object-fit:cover; display:block; opacity:0.85;">
+    <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(14,30,58,0.7) 0%, rgba(14,30,58,0.1) 100%); display:flex; align-items:center; padding:3rem;">
+      <div style="color:white; max-width:380px;">
+        <div style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;">De l'esquisse au rendu final</div>
+        <div style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:300;line-height:1.2;">Votre plan devient une image convaincante en quelques jours.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-dot"><span class="step-num">01</span></div>
+      <div class="step-title">Brief & documents</div>
+      <p class="step-desc">Envoyez-nous vos plans, photos ou croquis. Un simple échange email suffit pour cadrer le projet.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-dot"><span class="step-num">02</span></div>
+      <div class="step-title">Devis sous 24h</div>
+      <p class="step-desc">Vous recevez une proposition claire avec prix, délai et ce qui est inclus. Pas de surprise.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-dot"><span class="step-num">03</span></div>
+      <div class="step-title">Modélisation & rendu</div>
+      <p class="step-desc">Nous créons votre modèle 3D et produisons les rendus. Vous êtes informé à chaque étape.</p>
+    </div>
+    <div class="process-step reveal">
+      <div class="step-dot"><span class="step-num">04</span></div>
+      <div class="step-title">Livraison & retouches</div>
+      <p class="step-desc">Vous recevez vos fichiers en haute résolution. Les révisions sont incluses jusqu'à votre satisfaction.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PORTFOLIO ════════════════════════════════════ -->
+<section class="portfolio" id="portfolio">
+  <div class="portfolio-header reveal">
+    <div>
+      <div class="section-label">Réalisations</div>
+      <h2 class="section-title">Quelques projets réalisés.</h2>
+    </div>
+    <p class="section-sub">
+      Ravalement, architecture, aménagement intérieur — chaque projet est une opportunité de créer un visuel unique.
+    </p>
+  </div>
+
+  <div class="portfolio-grid reveal">
+    <div class="portfolio-item wide">
+      <img src="assets/render-farm.jpg" alt="Rendu bâtiment agricole French Farm">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Modélisation 3D · Industriel & Agricole</div>
+        <div class="portfolio-title">French Farm — bâtiment bois, Normandie</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-facade-rose.jpg" alt="Rendu ravalement façade enduit">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Rendu façade · Ravalement</div>
+        <div class="portfolio-title">Enduit rosé — maison individuelle</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-cour-paris.jpg" alt="Cour parisienne pergola">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Architecture · Espaces extérieurs</div>
+        <div class="portfolio-title">Cour intérieure avec pergola — Paris</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-extension.jpg" alt="Extension maison bois terrasse">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Extension · Rénovation</div>
+        <div class="portfolio-title">Extension bois & terrasse — maison de campagne</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-interieur.jpg" alt="Aménagement intérieur boutique">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Aménagement intérieur · Commerce</div>
+        <div class="portfolio-title">Boutique — concept store & mobilier sur mesure</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-maison-crepuscule.jpg" alt="Rendu maison au crépuscule">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Rendu façade · Résidentiel</div>
+        <div class="portfolio-title">Façade résidentielle — ambiance crépuscule</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-avant-apres2.jpg" alt="Avant après façade">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Avant / Après · Déclaration préalable</div>
+        <div class="portfolio-title">Simulation état projeté — dossier DP</div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <img src="assets/render-commerce.jpg" alt="Façade commerciale rue">
+      <div class="portfolio-overlay">
+        <div class="portfolio-cat">Rendu façade · Commercial</div>
+        <div class="portfolio-title">Devanture commerciale — intégration urbaine</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="portfolio-cta-row reveal">
+    <a href="#contact" class="btn-outline-light">Parler de votre projet →</a>
+  </div>
+</section>
+
+<!-- ═══ TARIFS ══════════════════════════════════════ -->
+<section class="tarifs" id="tarifs">
+  <div class="section-label reveal">Tarifs</div>
+  <h2 class="section-title reveal">Transparent et sans surprise.</h2>
+  <p class="section-sub reveal" style="margin-bottom: 0">
+    Chaque projet est différent. Ces tarifs indicatifs vous donnent une base — votre devis sera établi gratuitement sous 24h.
+  </p>
+
+  <div class="tarifs-grid reveal">
+    <div class="tarif-card">
+      <div class="tarif-name">Essentiel</div>
+      <div class="tarif-amount"><sup>à partir de </sup>290<sup>€</sup></div>
+      <div class="tarif-period">par rendu</div>
+      <div class="tarif-desc">Pour un premier rendu ou un projet ponctuel. Idéal pour illustrer un devis client.</div>
+      <div class="tarif-divider"></div>
+      <ul class="tarif-features">
+        <li class="tarif-feature">1 rendu photo-réaliste HD</li>
+        <li class="tarif-feature">1 angle de vue inclus</li>
+        <li class="tarif-feature">Livraison sous 7 jours</li>
+        <li class="tarif-feature">2 révisions incluses</li>
+        <li class="tarif-feature">Fichier haute résolution</li>
+      </ul>
+      <a href="#contact" class="tarif-cta">Demander un devis</a>
+    </div>
+
+    <div class="tarif-card featured">
+      <div class="featured-label">Le plus demandé</div>
+      <div class="tarif-name">Professionnel</div>
+      <div class="tarif-amount"><sup>à partir de </sup>590<sup>€</sup></div>
+      <div class="tarif-period">par projet</div>
+      <div class="tarif-desc">Pour les professionnels BTP qui veulent des visuels complets pour leurs clients ou dossiers.</div>
+      <div class="tarif-divider"></div>
+      <ul class="tarif-features">
+        <li class="tarif-feature">3 rendus HD (angles différents)</li>
+        <li class="tarif-feature">Modélisation 3D complète</li>
+        <li class="tarif-feature">Livraison sous 7 jours</li>
+        <li class="tarif-feature">Révisions illimitées</li>
+        <li class="tarif-feature">Format print & web inclus</li>
+        <li class="tarif-feature">Livraison prioritaire possible</li>
+      </ul>
+      <a href="#contact" class="tarif-cta">Demander un devis</a>
+    </div>
+
+    <div class="tarif-card">
+      <div class="tarif-name">Partenariat</div>
+      <div class="tarif-amount"><sup>dès </sup>790<sup>€/mois</sup></div>
+      <div class="tarif-period">engagement mensuel</div>
+      <div class="tarif-desc">Pour les agences et entreprises avec des besoins réguliers. Tarif préférentiel et priorité de traitement.</div>
+      <div class="tarif-divider"></div>
+      <ul class="tarif-features">
+        <li class="tarif-feature">Volume mensuel défini ensemble</li>
+        <li class="tarif-feature">Interlocuteur dédié</li>
+        <li class="tarif-feature">Priorité de traitement</li>
+        <li class="tarif-feature">Tarif dégressif sur volume</li>
+        <li class="tarif-feature">Facturation mensuelle simplifiée</li>
+      </ul>
+      <a href="#contact" class="tarif-cta">Nous contacter</a>
+    </div>
+  </div>
+
+  <div class="tarif-note reveal">
+    <strong>Devis gratuit sous 24h.</strong> Les tarifs indiqués sont des bases indicatives. Chaque projet est analysé individuellement — surface, complexité, délai souhaité — pour vous proposer un prix juste.
+  </div>
+</section>
+
+<!-- ═══ CONTACT ══════════════════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="section-label">Contact</div>
+  <h2 class="section-title">Envoyez-nous votre projet,<br>on vous répond sous 24h.</h2>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p>
+        Décrivez-nous votre projet : un email et quelques plans suffisent pour démarrer. Vous recevrez un devis clair sans engagement.
+      </p>
+      <div class="contact-details">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉</div>
+          <div class="contact-detail-text">
+            <strong>Email</strong>
+            cyprien.lanlo@lphorizon.fr
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">☎</div>
+          <div class="contact-detail-text">
+            <strong>Téléphone</strong>
+            07 89 30 80 51
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏱</div>
+          <div class="contact-detail-text">
+            <strong>Délai de réponse</strong>
+            Devis sous 24h, livraison dès 7 jours
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" placeholder="Jean">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" placeholder="Dupont">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Entreprise (optionnel)</label>
+        <input type="text" placeholder="Dupont Ravalement">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="jean@dupont.fr">
+      </div>
+      <div class="form-group">
+        <label>Type de projet</label>
+        <select>
+          <option value="">Choisir…</option>
+          <option>Rendu photo-réaliste façade</option>
+          <option>Modélisation 3D complète</option>
+          <option>Animation / visite virtuelle</option>
+          <option>Avant / après chantier</option>
+          <option>Plans & documents DP</option>
+          <option>Partenariat mensuel</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description du projet</label>
+        <textarea placeholder="Adresse, nature des travaux, délai souhaité, documents disponibles…"></textarea>
+      </div>
+      <button class="submit-btn" onclick="this.textContent='Envoyé — on revient vers vous sous 24h ✓'; this.disabled=true; this.style.opacity='0.7';">
+        Envoyer ma demande →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ══════════════════════════════════════ -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo-text">L&P Horizon — Lanlo & Partenaire</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Mentions légales</a></li>
+    <li><a href="#">Confidentialité</a></li>
+    <li><a href="#">CGU</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 L&P Horizon</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 70);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => io.observe(el));
+
+  // Nav shadow on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 50
+      ? '0 2px 20px rgba(14,30,58,0.08)'
+      : '';
+  });
+</script>
+
+</body>
+</html>

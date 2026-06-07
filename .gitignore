@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V7
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Fichiers sources (originaux non optimisés)
+assets/*.jpeg
+assets/*.png
+assets/photo1.jpg
+assets/photo2.jpg
+assets/bg3.jpg
+assets/bg4.jpg
+assets/logo-noir.jpg
+
+# Documents de travail
+*.zip
+*.pdf
+lph-horizon.html
+"1. Objet du projet.pdf"
